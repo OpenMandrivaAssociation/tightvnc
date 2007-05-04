@@ -32,6 +32,8 @@ Patch6:		tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
 Patch7:		tightvnc-1.2.9-use-stdlib-malloc.patch
 Patch8:		tightvnc-1.2.9-includes.patch
 Patch9:		tightvnc-xf4vnc-no-xkb.patch
+Patch10:        vnc_unixsrc-CVE-2007-1003.patch
+Patch11:        vnc_unixsrc-CVE-2007-1351-1352.patch
 Obsoletes:	vnc
 Provides:	vnc
 
@@ -91,6 +93,8 @@ online documentation about VNC.
 # conditional patch ):
 %patch9 -p1 -b .no-xkb
 %endif
+%patch10 -p1 -b .cve-2007-1003
+%patch11 -p1 -b .cve-2007-1351-1352
 
 # nuke references to /usr/local
 find . -name Imakefile | \
@@ -105,10 +109,10 @@ perl -pi -e "s|unix/:7100|unix/:-1|" vncserver
 %build
 %{serverbuild}
 xmkmf
-make CONFIGDIR=%{_libdir}/X11/config Makefiles
-make CONFIGDIR=%{_libdir}/X11/config includes
-make CONFIGDIR=%{_libdir}/X11/config depend
-make CDEBUGFLAGS="%optflags" CONFIGDIR=%{_libdir}/X11/config World
+make CONFIGDIR=%{_datadir}/X11/config Makefiles
+make CONFIGDIR=%{_datadir}/X11/config includes
+make CONFIGDIR=%{_datadir}/X11/config depend
+make CDEBUGFLAGS="%optflags" CONFIGDIR=%{_datadir}/X11/config World
 %if %{build_Xvnc}
 cd Xvnc
 ./configure
