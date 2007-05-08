@@ -1,41 +1,36 @@
-%define name	tightvnc
-%define version	1.2.9
-%define release	%mkrel 16
-%define vnc	vnc
+%define vnc        vnc
 
 # Define to build with upstream Xvnc based on XF86 3.3
 %define build_Xvnc 0
 
-Summary:	Remote graphical access	
-Name:		%{name}
-Version:	%{version}
-Release:	%{release}
-Group:		Networking/Remote access
-License:	GPL
-URL:		http://www.tightvnc.org/	
-Requires(pre):	/usr/bin/perl tcp_wrappers
-ExclusiveArch:	%{ix86} alpha sparc ppc s390 s390x x86_64 amd64 ppc64
-BuildRequires:	libx11-devel zlib-devel tcp_wrappers-devel libjpeg-devel xpm-devel xorg-x11 imake gccmakedep rman
-BuildRequires:	libxt-devel libxmu-devel libxaw-devel
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
-Source:		http://prdownloads.sourceforge.net/vnc-tight/%{name}-%{version}_unixsrc.tar.bz2
-Source1:	http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
-Source2:	%{name}-icons.tar.bz2
-Source3:	vncserverinit
-Patch1:		vnc-xclients.patch
-Patch2:		tightvnc-1.2.6-config-x86_64.patch
-Patch3:		vncserver-vncpasswd-1.2.6.patch
-Patch4:		vncserver-halfbaked.patch
-Patch5:		vncviewer-fix-crash-when-lose-focus.patch
-#deush
-Patch6:		tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
-Patch7:		tightvnc-1.2.9-use-stdlib-malloc.patch
-Patch8:		tightvnc-1.2.9-includes.patch
-Patch9:		tightvnc-xf4vnc-no-xkb.patch
+Name:           tightvnc
+Version:        1.3.9
+Release:        %mkrel 1
+Summary:        Remote graphical access        
+Group:          Networking/Remote access
+License:        GPL
+URL:            http://www.tightvnc.org/        
+Source0:        http://dl.sourceforge.net/vnc-tight/tightvnc-%{version}_unixsrc.tar.bz2
+Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
+Source2:        %{name}-icons.tar.bz2
+Source3:        vncserverinit
+Patch1:         vnc-xclients.patch
+Patch2:         tightvnc-1.2.6-config-x86_64.patch
+Patch3:         vncserver-vncpasswd-1.2.6.patch
+Patch4:         vncserver-halfbaked.patch
+Patch5:         vncviewer-fix-crash-when-lose-focus.patch
+Patch6:         tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
+Patch8:         tightvnc-1.2.9-includes.patch
+Patch9:         tightvnc-xf4vnc-no-xkb.patch
 Patch10:        vnc_unixsrc-CVE-2007-1003.patch
 Patch11:        vnc_unixsrc-CVE-2007-1351-1352.patch
-Obsoletes:	vnc
-Provides:	vnc
+Obsoletes:      vnc
+Provides:       vnc
+Requires(pre):  /usr/bin/perl tcp_wrappers
+BuildRequires:  X11-devel zlib-devel tcp_wrappers-devel libjpeg-devel xpm-devel xorg-x11 imake gccmakedep rman
+BuildRequires:  libxt-devel libxmu-devel libxaw-devel
+ExclusiveArch:  %{ix86} alpha sparc ppc s390 s390x x86_64 amd64 ppc64
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
 VNC allows you to access to a remote graphical display through the network.
@@ -49,32 +44,32 @@ bandwidth optimizations, TightVNC also includes many other improvements,
 optimizations and  bugfixes  over  VNC.  Note  that  TightVNC  is  free,
 cross-platform and compatible with the standard VNC.
 
-%package	server
+%package server
 Summary:        A VNC server
 Group:          System/Servers
-Requires(pre):         /sbin/chkconfig /etc/init.d
+Requires(post): rpm-helper
+Requires(preun): rpm-helper
 Obsoletes:      vnc-server vnc-java
 Provides:       vnc-server vnc-java
 %if ! %{build_Xvnc}
-Requires:	x11-server-xvnc
+Requires:       x11-server-xvnc
 %endif
 
-%description	server
+%description server
 The VNC system allows you to access the same desktop from a wide variety
 of platforms. This package is a VNC server, allowing  others  to  access
 the desktop on your machine.
 
-%package	doc
+%package doc
 Summary:        Complete documentation for VNC
 Group:          Networking/Remote access
-Obsoletes:	vnc-doc
-Provides:	vnc-doc
+Obsoletes:      vnc-doc
+Provides:       vnc-doc
 
-%description	doc
+%description doc
 This package contains HTML  documentation  about  VNC  (Virtual  Network
 Computing) programs. Install the vnc-doc package if you  want  extensive
 online documentation about VNC.
-
 
 %prep
 %setup -q -n vnc_unixsrc
@@ -87,7 +82,6 @@ online documentation about VNC.
 
 %patch5 -p1 -b .fix_crash
 %patch6 -p1 -b .fds_bits
-%patch7 -p1 -b .stdlib_malloc
 %patch8 -p1 -b .includes
 %if ! %{build_Xvnc}
 # conditional patch ):
@@ -117,7 +111,7 @@ make CDEBUGFLAGS="%optflags" CONFIGDIR=%{_datadir}/X11/config World
 cd Xvnc
 ./configure
 make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
-	EXTRA_DEFINES="-DUSE_LIBWRAP=1"
+        EXTRA_DEFINES="-DUSE_LIBWRAP=1"
 %endif
 
 
@@ -224,25 +218,13 @@ mkdir -p $RPM_BUILD_ROOT%_menudir
 %{make_session}
 
 %post server
-if [ "$1" = 1 ]; then
-        /sbin/chkconfig --add vncserver
-fi
+%_post_service vncserver
 
 %preun server
-if [ "$1" = 0 ]; then
-        /sbin/service vncserver stop >/dev/null 2>&1
-        /sbin/chkconfig --del vncserver
-fi
-
-%postun server
-if [ "$1" -ge "1" ]; then
-        /sbin/service vncserver condrestart >/dev/null 2>&1
-fi
-
+%_preun_service vncserver
 
 %clean
 rm -rf $RPM_BUILD_ROOT
-
 
 %files
 %defattr(-,root,root,755)
@@ -268,7 +250,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files server
 %defattr(-,root,root,755)
-%attr(0755,root,root) %config(noreplace) %_initrddir/%{vnc}server
+%attr(0755,root,root) %_initrddir/%{vnc}server
 %config(noreplace) %_sysconfdir/sysconfig/%{vnc}servers
 %if %{build_Xvnc}
 %{_bindir}/Xvnc
@@ -282,4 +264,3 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/vncconnect.1*
 %{_mandir}/man1/vncpasswd.1*
-
