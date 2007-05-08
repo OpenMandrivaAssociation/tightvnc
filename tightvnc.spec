@@ -24,9 +24,18 @@ Patch8:         vnc_unixsrc-CVE-2007-1003.patch
 Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
 Obsoletes:      vnc
 Provides:       vnc
-Requires(pre):  /usr/bin/perl tcp_wrappers
-BuildRequires:  X11-devel zlib-devel tcp_wrappers-devel libjpeg-devel xpm-devel xorg-x11 imake gccmakedep rman
-BuildRequires:  libxt-devel libxmu-devel libxaw-devel
+BuildRequires:  gccmakedep
+BuildRequires:  imake
+BuildRequires:  libjpeg-devel
+BuildRequires:  libxpm-devel
+BuildRequires:  libxt-devel
+BuildRequires:  libxmu-devel
+BuildRequires:  libxaw-devel
+BuildRequires:  libz-devel
+BuildRequires:  rman
+BuildRequires:  tcp_wrappers-devel
+BuildRequires:  X11-devel
+BuildRequires:  xorg-x11
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -46,8 +55,10 @@ Summary:        A VNC server
 Group:          System/Servers
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
-Obsoletes:      vnc-server vnc-java
-Provides:       vnc-server vnc-java
+Obsoletes:      vnc-server
+Obsoletes:      vnc-java
+Provides:       vnc-server
+Provides:       vnc-java
 %if %without xvnc
 Requires:       x11-server-xvnc
 %endif
@@ -94,7 +105,6 @@ find . -name "*,v" -exec rm -f {} \;
 perl -pi -e "s|/usr/local/vnc/classes|%{_datadir}/vnc/classes|" vncserver
 perl -pi -e "s|unix/:7100|unix/:-1|" vncserver
 
-
 %build
 %{serverbuild}
 xmkmf
@@ -112,29 +122,29 @@ make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
 %install
 rm -rf %{buildroot}
 
-install -D -m 755 vncviewer/vncviewer           %{buildroot}%{_bindir}/vncviewer
-install -D -m 755 vncpasswd/vncpasswd           %{buildroot}%{_bindir}/vncpasswd
-install -D -m 755 vncconnect/vncconnect         %{buildroot}%{_bindir}/vncconnect
-install -D -m 755 vncserver                     %{buildroot}%{_bindir}/vncserver
+install -D -m 755 vncviewer/vncviewer %{buildroot}%{_bindir}/vncviewer
+install -D -m 755 vncpasswd/vncpasswd %{buildroot}%{_bindir}/vncpasswd
+install -D -m 755 vncconnect/vncconnect %{buildroot}%{_bindir}/vncconnect
+install -D -m 755 vncserver %{buildroot}%{_bindir}/vncserver
 %if %with xvnc
-install -D -m 755 Xvnc/programs/Xserver/Xvnc    %{buildroot}%{_bindir}/Xvnc
+install -D -m 755 Xvnc/programs/Xserver/Xvnc %{buildroot}%{_bindir}/Xvnc
 %endif
 
-install -D -m 644 vncviewer/vncviewer.man               %{buildroot}%{_mandir}/man1/vncviewer.1
-install -D -m 644 vncpasswd/vncpasswd.man               %{buildroot}%{_mandir}/man1/vncpasswd.1
-install -D -m 644 vncconnect/vncconnect.man             %{buildroot}%{_mandir}/man1/vncconnect.1
-install -D -m 644 vncserver.man                         %{buildroot}%{_mandir}/man1/vncserver.1
-install -D -m 644 Xvnc/programs/Xserver/Xvnc.man        %{buildroot}%{_mandir}/man1/Xvnc.1
-# 1 extra man page; Xserver.man; This is the  original  Xserver  manpage
+install -D -m 644 vncviewer/vncviewer.man %{buildroot}%{_mandir}/man1/vncviewer.1
+install -D -m 644 vncpasswd/vncpasswd.man %{buildroot}%{_mandir}/man1/vncpasswd.1
+install -D -m 644 vncconnect/vncconnect.man %{buildroot}%{_mandir}/man1/vncconnect.1
+install -D -m 644 vncserver.man %{buildroot}%{_mandir}/man1/vncserver.1
+install -D -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvnc.1
+# 1 extra man page; Xserver.man; This is the  original Xserver manpage
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
-mkdir -p                                %{buildroot}%{_datadir}/%{vnc}
-cp -R classes                           %{buildroot}%{_datadir}/%{vnc}
+mkdir -p  %{buildroot}%{_datadir}/%{vnc}
+cp -R classes %{buildroot}%{_datadir}/%{vnc}
 
 # Some old docs, better than nothing.
-mkdir -p                                %{buildroot}%{_datadir}/%{name}/docs
-cp -R vnc_docs/*                        %{buildroot}%{_datadir}/%{name}/docs
+mkdir -p %{buildroot}%{_datadir}/%{name}/docs
+cp -R vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
 
 # icons
 install -D -m 644 %{name}48.png %{buildroot}%{_liconsdir}/%{name}.png
@@ -142,9 +152,9 @@ install -D -m 644 %{name}32.png %{buildroot}%{_iconsdir}/%{name}.png
 install -D -m 644 %{name}16.png %{buildroot}%{_miconsdir}/%{name}.png
 
 # Menu entry
-mkdir -p        %{buildroot}%{_menudir}
+mkdir -p %{buildroot}%{_menudir}
 
-cat << EOF >%{buildroot}%{_menudir}/%{name}
+cat > %{buildroot}%{_menudir}/%{name} << EOF
 ?package(%name): \
 needs="text" \
 section="Internet/Remote Access" \
@@ -168,9 +178,8 @@ Categories=X-MandrivaLinux-Internet-RemoteAccess;Network;RemoteAccess; Dialup;
 Encoding=UTF-8
 EOF
 
-install -d -m0755 %{buildroot}%{_sysconfdir}/sysconfig
+install -d -m 0755 %{buildroot}%{_sysconfdir}/sysconfig
 cat > %{buildroot}/%{_sysconfdir}/sysconfig/%{vnc}servers << EOF
-
 # The VNCSERVERS variable is a list of display:user pairs.
 #
 # Uncomment the line below to start a VNC server on  display  :1  as  my
@@ -185,10 +194,7 @@ cat > %{buildroot}/%{_sysconfdir}/sysconfig/%{vnc}servers << EOF
 # VNCSERVERS="1:myusername"
 EOF
 
-install -m 0755 %SOURCE3 -D %{buildroot}/%{_initrddir}/%{vnc}server
-
-# menu
-mkdir -p %{buildroot}%{_menudir}
+install -m 0755 %{SOURCE3} -D %{buildroot}/%{_initrddir}/%{vnc}server
 
 %clean
 rm -rf %{buildroot}
