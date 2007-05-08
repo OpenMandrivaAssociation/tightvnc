@@ -4,7 +4,7 @@
 Name:           tightvnc
 Version:        1.3.9
 Release:        %mkrel 2
-Summary:        Remote graphical access        
+Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
 URL:            http://www.tightvnc.org/        
@@ -27,7 +27,6 @@ Provides:       vnc
 Requires(pre):  /usr/bin/perl tcp_wrappers
 BuildRequires:  X11-devel zlib-devel tcp_wrappers-devel libjpeg-devel xpm-devel xorg-x11 imake gccmakedep rman
 BuildRequires:  libxt-devel libxmu-devel libxaw-devel
-ExclusiveArch:  %{ix86} alpha sparc ppc s390 s390x x86_64 amd64 ppc64
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -133,9 +132,6 @@ install -D -m 644 Xvnc/programs/Xserver/Xvnc.man        %{buildroot}%{_mandir}/m
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
-# bzip2 manpages (should be automatic, dirty);
-bzip2 %{buildroot}/%{_mandir}/man1/*.1
-
 mkdir -p                                %{buildroot}%{_datadir}/%{vnc}
 cp -R classes                           %{buildroot}%{_datadir}/%{vnc}
 
@@ -175,8 +171,8 @@ Categories=X-MandrivaLinux-Internet-RemoteAccess;Network;RemoteAccess; Dialup;
 Encoding=UTF-8
 EOF
 
-install -d -m0755 %buildroot%_sysconfdir/sysconfig
-cat > %buildroot/%_sysconfdir/sysconfig/%{vnc}servers << EOF
+install -d -m0755 %{buildroot}%{_sysconfdir}/sysconfig
+cat > %{buildroot}/%{_sysconfdir}/sysconfig/%{vnc}servers << EOF
 
 # The VNCSERVERS variable is a list of display:user pairs.
 #
@@ -192,21 +188,19 @@ cat > %buildroot/%_sysconfdir/sysconfig/%{vnc}servers << EOF
 # VNCSERVERS="1:myusername"
 EOF
 
-install -m755 %SOURCE3 -D %buildroot/%{_initrddir}/%{vnc}server
+install -m 0755 %SOURCE3 -D %{buildroot}/%{_initrddir}/%{vnc}server
 
 # menu
-mkdir -p %{buildroot}%_menudir
+mkdir -p %{buildroot}%{_menudir}
 
 %clean
 rm -rf %{buildroot}
 
 %post
-# menu
 %{update_menus}
 %{make_session}
 
 %postun
-# menu
 %{clean_menus}
 %{make_session}
 
@@ -217,36 +211,35 @@ rm -rf %{buildroot}
 %_preun_service vncserver
 
 %files
-%defattr(-,root,root,755)
+%defattr(-,root,root,0755)
 %{_bindir}/vncviewer
-
-%defattr(644,root,root,755)
+%defattr(0644,root,root,0755)
+%doc ChangeLog README WhatsNew
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/%{vnc}/classes/
 %{_datadir}/applications/mandriva-%{name}.desktop
 %dir %{_datadir}/%{vnc}/
-%doc ChangeLog README WhatsNew
 %{_menudir}/%{name}
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 
 %files doc
-%defattr(644,root,root,0755)
+%defattr(0644,root,root,0755)
 %doc README WhatsNew
 %{_datadir}/%{name}/docs/*
 
 %files server
 %defattr(-,root,root,0755)
-%attr(0755,root,root) %_initrddir/%{vnc}server
-%config(noreplace) %_sysconfdir/sysconfig/%{vnc}servers
 %if %with xvnc
 %{_bindir}/Xvnc
 %endif
 %{_bindir}/vncserver
 %{_bindir}/vncpasswd
 %{_bindir}/vncconnect
+%attr(0755,root,root) %{_initrddir}/%{vnc}server
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/vncconnect.1*
 %{_mandir}/man1/vncpasswd.1*
+%config(noreplace) %{_sysconfdir}/sysconfig/%{vnc}servers
