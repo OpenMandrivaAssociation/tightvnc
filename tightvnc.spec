@@ -111,18 +111,18 @@ xmkmf
 make CONFIGDIR=%{_datadir}/X11/config Makefiles
 make CONFIGDIR=%{_datadir}/X11/config includes
 make CONFIGDIR=%{_datadir}/X11/config depend
-make CDEBUGFLAGS="%optflags" CONFIGDIR=%{_datadir}/X11/config World
+make CDEBUGFLAGS="%{optflags}" CONFIGDIR=%{_datadir}/X11/config World
 %if %with xvnc
 cd Xvnc
 ./configure
-make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
+make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%{optflags}" World \
         EXTRA_DEFINES="-DUSE_LIBWRAP=1"
 %endif
 
 %install
 rm -rf %{buildroot}
 
-install -D -m 755 vncviewer/vncviewer %{buildroot}%{_bindir}/vncviewer
+install -D -m 0755 vncviewer/vncviewer %{buildroot}%{_bindir}/vncviewer
 install -D -m 755 vncpasswd/vncpasswd %{buildroot}%{_bindir}/vncpasswd
 install -D -m 755 vncconnect/vncconnect %{buildroot}%{_bindir}/vncconnect
 install -D -m 755 vncserver %{buildroot}%{_bindir}/vncserver
@@ -140,11 +140,11 @@ install -D -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvn
 # include it.
 
 mkdir -p  %{buildroot}%{_datadir}/%{vnc}
-cp -R classes %{buildroot}%{_datadir}/%{vnc}
+cp -a classes %{buildroot}%{_datadir}/%{vnc}
 
 # Some old docs, better than nothing.
 mkdir -p %{buildroot}%{_datadir}/%{name}/docs
-cp -R vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
+cp -a vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
 
 # icons
 install -D -m 644 %{name}48.png %{buildroot}%{_liconsdir}/%{name}.png
@@ -153,7 +153,6 @@ install -D -m 644 %{name}16.png %{buildroot}%{_miconsdir}/%{name}.png
 
 # Menu entry
 mkdir -p %{buildroot}%{_menudir}
-
 cat > %{buildroot}%{_menudir}/%{name} << EOF
 ?package(%name): \
 needs="text" \
