@@ -1,11 +1,9 @@
-%define vnc        vnc
-
-# Define to build with upstream Xvnc based on XF86 3.3
-%define build_Xvnc 0
+%bcond_with     xvnc
+%define vnc     vnc
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        Remote graphical access        
 Group:          Networking/Remote access
 License:        GPL
@@ -51,7 +49,7 @@ Requires(post): rpm-helper
 Requires(preun): rpm-helper
 Obsoletes:      vnc-server vnc-java
 Provides:       vnc-server vnc-java
-%if ! %{build_Xvnc}
+%if %without xvnc
 Requires:       x11-server-xvnc
 %endif
 
@@ -83,7 +81,7 @@ online documentation about VNC.
 %patch5 -p1 -b .fix_crash
 %patch6 -p1 -b .fds_bits
 %patch8 -p1 -b .includes
-%if ! %{build_Xvnc}
+%if %without xvnc
 # conditional patch ):
 %patch9 -p1 -b .no-xkb
 %endif
@@ -107,7 +105,7 @@ make CONFIGDIR=%{_datadir}/X11/config Makefiles
 make CONFIGDIR=%{_datadir}/X11/config includes
 make CONFIGDIR=%{_datadir}/X11/config depend
 make CDEBUGFLAGS="%optflags" CONFIGDIR=%{_datadir}/X11/config World
-%if %{build_Xvnc}
+%if %with xvnc
 cd Xvnc
 ./configure
 make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
@@ -116,46 +114,39 @@ make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
 
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
-install -D -m 755 vncviewer/vncviewer           $RPM_BUILD_ROOT%{_bindir}/vncviewer
-install -D -m 755 vncpasswd/vncpasswd           $RPM_BUILD_ROOT%{_bindir}/vncpasswd
-install -D -m 755 vncconnect/vncconnect         $RPM_BUILD_ROOT%{_bindir}/vncconnect
-install -D -m 755 vncserver                     $RPM_BUILD_ROOT%{_bindir}/vncserver
-%if %{build_Xvnc}
-install -D -m 755 Xvnc/programs/Xserver/Xvnc    $RPM_BUILD_ROOT%{_bindir}/Xvnc
+install -D -m 755 vncviewer/vncviewer           %{buildroot}%{_bindir}/vncviewer
+install -D -m 755 vncpasswd/vncpasswd           %{buildroot}%{_bindir}/vncpasswd
+install -D -m 755 vncconnect/vncconnect         %{buildroot}%{_bindir}/vncconnect
+install -D -m 755 vncserver                     %{buildroot}%{_bindir}/vncserver
+%if %with xvnc
+install -D -m 755 Xvnc/programs/Xserver/Xvnc    %{buildroot}%{_bindir}/Xvnc
 %endif
 
-# Debugging support
-if ! [ $DEBUG ]; then
-        strip   $RPM_BUILD_ROOT%{_bindir}/vncconnect \
-                $RPM_BUILD_ROOT%{_bindir}/vncpasswd  \
-                $RPM_BUILD_ROOT%{_bindir}/vncviewer
-fi
-
-install -D -m 644 vncviewer/vncviewer.man               $RPM_BUILD_ROOT%{_mandir}/man1/vncviewer.1
-install -D -m 644 vncpasswd/vncpasswd.man               $RPM_BUILD_ROOT%{_mandir}/man1/vncpasswd.1
-install -D -m 644 vncconnect/vncconnect.man             $RPM_BUILD_ROOT%{_mandir}/man1/vncconnect.1
-install -D -m 644 vncserver.man                         $RPM_BUILD_ROOT%{_mandir}/man1/vncserver.1
-install -D -m 644 Xvnc/programs/Xserver/Xvnc.man        $RPM_BUILD_ROOT%{_mandir}/man1/Xvnc.1
+install -D -m 644 vncviewer/vncviewer.man               %{buildroot}%{_mandir}/man1/vncviewer.1
+install -D -m 644 vncpasswd/vncpasswd.man               %{buildroot}%{_mandir}/man1/vncpasswd.1
+install -D -m 644 vncconnect/vncconnect.man             %{buildroot}%{_mandir}/man1/vncconnect.1
+install -D -m 644 vncserver.man                         %{buildroot}%{_mandir}/man1/vncserver.1
+install -D -m 644 Xvnc/programs/Xserver/Xvnc.man        %{buildroot}%{_mandir}/man1/Xvnc.1
 # 1 extra man page; Xserver.man; This is the  original  Xserver  manpage
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
 # bzip2 manpages (should be automatic, dirty);
-bzip2 $RPM_BUILD_ROOT/%{_mandir}/man1/*.1
+bzip2 %{buildroot}/%{_mandir}/man1/*.1
 
-mkdir -p                                $RPM_BUILD_ROOT%{_datadir}/%{vnc}
-cp -R classes                           $RPM_BUILD_ROOT%{_datadir}/%{vnc}
+mkdir -p                                %{buildroot}%{_datadir}/%{vnc}
+cp -R classes                           %{buildroot}%{_datadir}/%{vnc}
 
 # Some old docs, better than nothing.
-mkdir -p                                $RPM_BUILD_ROOT%{_datadir}/%{name}/docs
-cp -R vnc_docs/*                        $RPM_BUILD_ROOT%{_datadir}/%{name}/docs
+mkdir -p                                %{buildroot}%{_datadir}/%{name}/docs
+cp -R vnc_docs/*                        %{buildroot}%{_datadir}/%{name}/docs
 
 # icons
-install -D -m 644 %{name}48.png $RPM_BUILD_ROOT%{_liconsdir}/%{name}.png
-install -D -m 644 %{name}32.png $RPM_BUILD_ROOT%{_iconsdir}/%{name}.png
-install -D -m 644 %{name}16.png $RPM_BUILD_ROOT%{_miconsdir}/%{name}.png
+install -D -m 644 %{name}48.png %{buildroot}%{_liconsdir}/%{name}.png
+install -D -m 644 %{name}32.png %{buildroot}%{_iconsdir}/%{name}.png
+install -D -m 644 %{name}16.png %{buildroot}%{_miconsdir}/%{name}.png
 
 # Menu entry
 mkdir -p        %{buildroot}%{_menudir}
@@ -171,8 +162,8 @@ command="vncviewer" \
 xdg="true"
 EOF
 
-mkdir -p $RPM_BUILD_ROOT%{_datadir}/applications
-cat > $RPM_BUILD_ROOT%{_datadir}/applications/mandriva-%{name}.desktop << EOF
+mkdir -p %{buildroot}%{_datadir}/applications
+cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=Tightvnc
 Comment=%{summary}
@@ -204,8 +195,10 @@ EOF
 install -m755 %SOURCE3 -D %buildroot/%{_initrddir}/%{vnc}server
 
 # menu
-mkdir -p $RPM_BUILD_ROOT%_menudir
+mkdir -p %{buildroot}%_menudir
 
+%clean
+rm -rf %{buildroot}
 
 %post
 # menu
@@ -223,9 +216,6 @@ mkdir -p $RPM_BUILD_ROOT%_menudir
 %preun server
 %_preun_service vncserver
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 %files
 %defattr(-,root,root,755)
 %{_bindir}/vncviewer
@@ -236,30 +226,26 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/mandriva-%{name}.desktop
 %dir %{_datadir}/%{vnc}/
 %doc ChangeLog README WhatsNew
-
 %{_menudir}/%{name}
-
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
 
 %files doc
-%defattr(644,root,root,755)
+%defattr(644,root,root,0755)
 %doc README WhatsNew
 %{_datadir}/%{name}/docs/*
 
 %files server
-%defattr(-,root,root,755)
+%defattr(-,root,root,0755)
 %attr(0755,root,root) %_initrddir/%{vnc}server
 %config(noreplace) %_sysconfdir/sysconfig/%{vnc}servers
-%if %{build_Xvnc}
+%if %with xvnc
 %{_bindir}/Xvnc
 %endif
 %{_bindir}/vncserver
 %{_bindir}/vncpasswd
 %{_bindir}/vncconnect
-
-#%_datadir/vnc
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/vncconnect.1*
