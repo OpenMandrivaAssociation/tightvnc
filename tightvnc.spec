@@ -12,16 +12,16 @@ Source0:        http://dl.sourceforge.net/vnc-tight/tightvnc-%{version}_unixsrc.
 Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
 Source2:        %{name}-icons.tar.bz2
 Source3:        vncserverinit
-Patch1:         vnc-xclients.patch
-Patch2:         tightvnc-1.2.6-config-x86_64.patch
-Patch3:         vncserver-vncpasswd-1.2.6.patch
-Patch4:         vncserver-halfbaked.patch
-Patch5:         vncviewer-fix-crash-when-lose-focus.patch
-Patch6:         tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
-Patch8:         tightvnc-1.2.9-includes.patch
-Patch9:         tightvnc-xf4vnc-no-xkb.patch
-Patch10:        vnc_unixsrc-CVE-2007-1003.patch
-Patch11:        vnc_unixsrc-CVE-2007-1351-1352.patch
+Patch0:         vnc-xclients.patch
+Patch1:         tightvnc-1.2.6-config-x86_64.patch
+Patch2:         vncserver-vncpasswd-1.2.6.patch
+Patch3:         vncserver-halfbaked.patch
+Patch4:         vncviewer-fix-crash-when-lose-focus.patch
+Patch5:         tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
+Patch6:         tightvnc-1.2.9-includes.patch
+Patch7:         tightvnc-xf4vnc-no-xkb.patch
+Patch8:         vnc_unixsrc-CVE-2007-1003.patch
+Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
 Obsoletes:      vnc
 Provides:       vnc
 Requires(pre):  /usr/bin/perl tcp_wrappers
@@ -72,20 +72,18 @@ online documentation about VNC.
 %setup -q -n vnc_unixsrc
 %setup -q -T -D -a1 -n vnc_unixsrc
 %setup -q -T -D -a2 -n vnc_unixsrc
-%patch1 -p1 -b .orig
-%patch2 -p1 -b .config-x86_64
-%patch3 -p1 
-%patch4 -p0 -b .halfbaked
-
-%patch5 -p1 -b .fix_crash
-%patch6 -p1 -b .fds_bits
-%patch8 -p1 -b .includes
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1 
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
 %if %without xvnc
-# conditional patch ):
-%patch9 -p1 -b .no-xkb
+%patch7 -p1
 %endif
-%patch10 -p1 -b .cve-2007-1003
-%patch11 -p1 -b .cve-2007-1351-1352
+%patch8 -p1
+%patch9 -p1
 
 # nuke references to /usr/local
 find . -name Imakefile | \
@@ -110,7 +108,6 @@ cd Xvnc
 make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%optflags" World \
         EXTRA_DEFINES="-DUSE_LIBWRAP=1"
 %endif
-
 
 %install
 rm -rf %{buildroot}
