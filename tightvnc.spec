@@ -142,9 +142,6 @@ install -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvnc.1
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
-install -d -m 755 %{buildroot}%{_datadir}/%{vnc}
-cp -a classes %{buildroot}%{_datadir}/%{vnc}
-
 # Some old docs, better than nothing.
 install -d -m 755 %{buildroot}%{_datadir}/%{name}/docs
 cp -a vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
@@ -213,9 +210,7 @@ rm -rf %{buildroot}
 %{_bindir}/vncviewer
 %{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
-%{_datadir}/%{vnc}/classes/
 %{_datadir}/applications/mandriva-%{name}.desktop
-%dir %{_datadir}/%{vnc}/
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
