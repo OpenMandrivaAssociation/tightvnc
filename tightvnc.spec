@@ -123,28 +123,30 @@ make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%{optflags}" World \
 %install
 rm -rf %{buildroot}
 
-install -D -m 0755 vncviewer/vncviewer %{buildroot}%{_bindir}/vncviewer
-install -D -m 755 vncpasswd/vncpasswd %{buildroot}%{_bindir}/vncpasswd
-install -D -m 755 vncconnect/vncconnect %{buildroot}%{_bindir}/vncconnect
-install -D -m 755 vncserver %{buildroot}%{_bindir}/vncserver
+install -d -m 755 %{buildroot}%{_bindir}
+install -m 755 vncviewer/vncviewer %{buildroot}%{_bindir}/vncviewer
+install -m 755 vncpasswd/vncpasswd %{buildroot}%{_bindir}/vncpasswd
+install -m 755 vncconnect/vncconnect %{buildroot}%{_bindir}/vncconnect
+install -m 755 vncserver %{buildroot}%{_bindir}/vncserver
 %if %with xvnc
-install -D -m 755 Xvnc/programs/Xserver/Xvnc %{buildroot}%{_bindir}/Xvnc
+install -m 755 Xvnc/programs/Xserver/Xvnc %{buildroot}%{_bindir}/Xvnc
 %endif
 
-install -D -m 644 vncviewer/vncviewer.man %{buildroot}%{_mandir}/man1/vncviewer.1
-install -D -m 644 vncpasswd/vncpasswd.man %{buildroot}%{_mandir}/man1/vncpasswd.1
-install -D -m 644 vncconnect/vncconnect.man %{buildroot}%{_mandir}/man1/vncconnect.1
-install -D -m 644 vncserver.man %{buildroot}%{_mandir}/man1/vncserver.1
-install -D -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvnc.1
+install -d -m 755 %{buildroot}%{_mandir}/man1
+install -m 644 vncviewer/vncviewer.man %{buildroot}%{_mandir}/man1/vncviewer.1
+install -m 644 vncpasswd/vncpasswd.man %{buildroot}%{_mandir}/man1/vncpasswd.1
+install -m 644 vncconnect/vncconnect.man %{buildroot}%{_mandir}/man1/vncconnect.1
+install -m 644 vncserver.man %{buildroot}%{_mandir}/man1/vncserver.1
+install -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvnc.1
 # 1 extra man page; Xserver.man; This is the  original Xserver manpage
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
-mkdir -p  %{buildroot}%{_datadir}/%{vnc}
+install -d -m 755 %{buildroot}%{_datadir}/%{vnc}
 cp -a classes %{buildroot}%{_datadir}/%{vnc}
 
 # Some old docs, better than nothing.
-mkdir -p %{buildroot}%{_datadir}/%{name}/docs
+install -d -m 755 %{buildroot}%{_datadir}/%{name}/docs
 cp -a vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
 
 # icons
@@ -206,10 +208,9 @@ rm -rf %{buildroot}
 %_preun_service vncserver
 
 %files
-%defattr(-,root,root,0755)
-%{_bindir}/vncviewer
-%defattr(0644,root,root,0755)
+%defattr(-,root,root)
 %doc ChangeLog README WhatsNew
+%{_bindir}/vncviewer
 %{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/%{vnc}/classes/
@@ -220,19 +221,19 @@ rm -rf %{buildroot}
 %{_miconsdir}/%{name}.png
 
 %files doc
-%defattr(0644,root,root,0755)
+%defattr(-,root,root)
 %doc README WhatsNew
 %{_datadir}/%{name}/docs/*
 
 %files server
-%defattr(-,root,root,0755)
+%defattr(-,root,root)
 %if %with xvnc
 %{_bindir}/Xvnc
 %endif
 %{_bindir}/vncserver
 %{_bindir}/vncpasswd
 %{_bindir}/vncconnect
-%attr(0755,root,root) %{_initrddir}/%{vnc}server
+%{_initrddir}/%{vnc}server
 %{_mandir}/man1/Xvnc.1*
 %{_mandir}/man1/vncserver.1*
 %{_mandir}/man1/vncconnect.1*
