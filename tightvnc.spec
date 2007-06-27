@@ -142,9 +142,10 @@ install -m 644 Xvnc/programs/Xserver/Xvnc.man %{buildroot}%{_mandir}/man1/Xvnc.1
 # and should only be installed if no X is on the system. I choose not to
 # include it.
 
-# Some old docs, better than nothing.
-install -d -m 755 %{buildroot}%{_datadir}/%{name}/docs
-cp -a vnc_docs/* %{buildroot}%{_datadir}/%{name}/docs
+# handle documentation manually
+install -d -m 755 %{buildroot}%{_docdir}/%{name}
+install -m 644 ChangeLog README WhatsNew %{buildroot}%{_docdir}/%{name}
+cp -a vnc_docs/* %{buildroot}%{_docdir}/%{name}
 
 # icons
 install -D -m 644 %{name}48.png %{buildroot}%{_liconsdir}/%{name}.png
@@ -206,7 +207,10 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root)
-%doc ChangeLog README WhatsNew
+%dir %{_docdir}/%{name}
+%{_docdir}/%{name}/README
+%{_docdir}/%{name}/WhatsNew
+%{_docdir}/%{name}/ChangeLog
 %{_bindir}/vncviewer
 %{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
@@ -217,8 +221,10 @@ rm -rf %{buildroot}
 
 %files doc
 %defattr(-,root,root)
-%doc README WhatsNew
-%{_datadir}/%{name}/docs/*
+%{_docdir}/%{name}/*
+%exclude %{_docdir}/%{name}/README
+%exclude %{_docdir}/%{name}/WhatsNew
+%exclude %{_docdir}/%{name}/ChangeLog
 
 %files server
 %defattr(-,root,root)
