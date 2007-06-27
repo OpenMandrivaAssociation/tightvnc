@@ -3,7 +3,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 2
+Release:        %mkrel 3
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -173,7 +173,7 @@ Exec=%{_bindir}/vncviewer
 Icon=%{name}
 Terminal=true
 Type=Application
-Categories=X-MandrivaLinux-Internet-RemoteAccess;Network;RemoteAccess; Dialup;
+Categories=Network;RemoteAccess; Dialup;
 Encoding=UTF-8
 EOF
 
