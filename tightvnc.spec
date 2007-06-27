@@ -153,18 +153,6 @@ install -D -m 644 %{name}32.png %{buildroot}%{_iconsdir}/%{name}.png
 install -D -m 644 %{name}16.png %{buildroot}%{_miconsdir}/%{name}.png
 
 # Menu entry
-mkdir -p %{buildroot}%{_menudir}
-cat > %{buildroot}%{_menudir}/%{name} << EOF
-?package(%name): \
-needs="text" \
-section="Internet/Remote Access" \
-title="TightVNC" \
-icon="tightvnc.png" \
-longtitle="Control a pc from anywhere" \
-command="vncviewer" \
-xdg="true"
-EOF
-
 mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
@@ -227,7 +215,6 @@ rm -rf %{buildroot}
 %{_datadir}/%{vnc}/classes/
 %{_datadir}/applications/mandriva-%{name}.desktop
 %dir %{_datadir}/%{vnc}/
-%{_menudir}/%{name}
 %{_liconsdir}/%{name}.png
 %{_iconsdir}/%{name}.png
 %{_miconsdir}/%{name}.png
