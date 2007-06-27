@@ -12,6 +12,7 @@ Source0:        http://dl.sourceforge.net/vnc-tight/tightvnc-%{version}_unixsrc.
 Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
 Source2:        %{name}-icons.tar.bz2
 Source3:        vncserverinit
+Source4:        %{name}.bash-completion
 Patch0:         vnc-xclients.patch
 Patch1:         tightvnc-1.2.6-config-x86_64.patch
 Patch2:         vncserver-vncpasswd-1.2.6.patch
@@ -195,6 +196,10 @@ EOF
 
 install -m 0755 %{SOURCE3} -D %{buildroot}/%{_initrddir}/%{vnc}server
 
+# bash completion
+install -d -m 755 %{buildroot}%{_sysconfdir}/bash_completion.d
+install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
+
 %clean
 rm -rf %{buildroot}
 
@@ -217,6 +222,7 @@ rm -rf %{buildroot}
 %{_bindir}/vncviewer
 %defattr(0644,root,root,0755)
 %doc ChangeLog README WhatsNew
+%{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/%{vnc}/classes/
 %{_datadir}/applications/mandriva-%{name}.desktop
