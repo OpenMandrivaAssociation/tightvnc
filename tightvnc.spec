@@ -3,7 +3,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 3
+Release:        %mkrel 4
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -112,11 +112,11 @@ xmkmf
 make CONFIGDIR=%{_datadir}/X11/config Makefiles
 make CONFIGDIR=%{_datadir}/X11/config includes
 make CONFIGDIR=%{_datadir}/X11/config depend
-make CDEBUGFLAGS="%{optflags}" CONFIGDIR=%{_datadir}/X11/config World
+make CDEBUGFLAGS="$RPM_OPT_FLAGS" CONFIGDIR=%{_datadir}/X11/config World
 %if %with xvnc
 cd Xvnc
 ./configure
-make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="%{optflags}" World \
+make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="$RPM_OPT_FLAGS" World \
         EXTRA_DEFINES="-DUSE_LIBWRAP=1"
 %endif
 
