@@ -1,9 +1,10 @@
 %bcond_with     xvnc
 %define vnc     vnc
+%define gcj_support 1
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 4
+Release:        %mkrel 5
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -13,6 +14,7 @@ Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
 Source2:        %{name}-icons.tar.bz2
 Source3:        vncserverinit
 Source4:        %{name}.bash-completion
+Source5:        http://downloads.sourceforge.net/vnc-tight/tightvnc-%{version}_javasrc.tar.gz
 Patch0:         vnc-xclients.patch
 Patch1:         tightvnc-1.2.6-config-x86_64.patch
 Patch2:         vncserver-vncpasswd-1.2.6.patch
@@ -23,8 +25,8 @@ Patch6:         tightvnc-1.2.9-includes.patch
 Patch7:         tightvnc-xf4vnc-no-xkb.patch
 Patch8:         vnc_unixsrc-CVE-2007-1003.patch
 Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
-Obsoletes:      vnc
-Provides:       vnc
+Obsoletes:      vnc < %{version}
+Provides:       vnc = %{version}
 BuildRequires:  gccmakedep
 BuildRequires:  imake
 BuildRequires:  libjpeg-devel
@@ -56,10 +58,8 @@ Summary:        A VNC server
 Group:          System/Servers
 Requires(post): rpm-helper
 Requires(preun): rpm-helper
-Obsoletes:      vnc-server
-Obsoletes:      vnc-java
-Provides:       vnc-server
-Provides:       vnc-java
+Obsoletes:      vnc-server < %{version}-%{release}
+Provides:       vnc-server = %{version}-%{release}
 %if %without xvnc
 Requires:       x11-server-xvnc
 %endif
@@ -69,11 +69,30 @@ The VNC system allows you to access the same desktop from a wide variety
 of platforms. This package is a VNC server, allowing  others  to  access
 the desktop on your machine.
 
+%package java
+Summary:        A VNC server
+Group:          Development/Java
+Obsoletes:      vnc-java < %{version}-%{release}
+Provides:       vnc-java = %{version}-%{release}
+%if %{gcj_support}
+Requires(post): java-gcj-compat
+Requires(postun): java-gcj-compat
+BuildRequires:  java-gcj-compat-devel
+%else
+BuildArch:      noarch
+BuildRequires:  java-devel
+%endif
+
+%description java
+The VNC system allows you to access the same desktop from a wide variety
+of platforms. This package is a VNC server, allowing  others  to  access
+the desktop on your machine.
+
 %package doc
 Summary:        Complete documentation for VNC
 Group:          Networking/Remote access
-Obsoletes:      vnc-doc
-Provides:       vnc-doc
+Obsoletes:      vnc-doc < %{version}
+Provides:       vnc-doc = %{version}
 
 %description doc
 This package contains HTML  documentation  about  VNC  (Virtual  Network
@@ -84,6 +103,8 @@ online documentation about VNC.
 %setup -q -n vnc_unixsrc
 %setup -q -T -D -a1 -n vnc_unixsrc
 %setup -q -T -D -a2 -n vnc_unixsrc
+%setup -q -T -D -a5 -n vnc_unixsrc
+%{__perl} -pi -e 's/ \-O//' vnc_javasrc/Makefile
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1 
@@ -119,6 +140,9 @@ cd Xvnc
 make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="$RPM_OPT_FLAGS" World \
         EXTRA_DEFINES="-DUSE_LIBWRAP=1"
 %endif
+
+cd vnc_javasrc
+%{__make} ARCHIVE=vncviewer-%{version}.jar CP=%{__cp} JC=%{javac} JCFLAGS="-g" JAR=%{jar} INSTALL_DIR= clean all
 
 %install
 rm -rf %{buildroot}
@@ -188,6 +212,17 @@ install -m 0755 %{SOURCE3} -D %{buildroot}/%{_initrddir}/%{vnc}server
 install -d -m 755 %{buildroot}%{_sysconfdir}/bash_completion.d
 install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
 
+%{__mkdir_p} %{buildroot}%{_javadir}
+cd vnc_javasrc
+%{__make} ARCHIVE=vncviewer-%{version}.jar CP=%{__cp} JC=%{javac} JCFLAGS="-g" JAR=%{jar} INSTALL_DIR=%{buildroot}%{_javadir} install
+(cd %{buildroot}%{_javadir} && %{__ln_s} vncviewer-%{version}.jar VncViewer-%{version}.jar)
+(cd %{buildroot}%{_javadir} && for jar in *-%{version}*; do %{__ln_s} ${jar} ${jar/-%{version}/}; done)
+%{__rm} %{buildroot}%{_javadir}/*.class
+
+%if %{gcj_support}
+%{_bindir}/aot-compile-rpm
+%endif
+
 %clean
 rm -rf %{buildroot}
 
@@ -205,6 +240,14 @@ rm -rf %{buildroot}
 %preun server
 %_preun_service vncserver
 
+%if %{gcj_support}
+%post java
+%{update_gcjdb}
+
+%postun java
+%{clean_gcjdb}
+%endif
+
 %files
 %defattr(-,root,root)
 %dir %{_docdir}/%{name}
@@ -212,7 +255,7 @@ rm -rf %{buildroot}
 %{_docdir}/%{name}/WhatsNew
 %{_docdir}/%{name}/ChangeLog
 %{_bindir}/vncviewer
-%{_sysconfdir}/bash_completion.d/%{name}
+%config(noreplace) %{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_liconsdir}/%{name}.png
@@ -220,7 +263,7 @@ rm -rf %{buildroot}
 %{_miconsdir}/%{name}.png
 
 %files doc
-%defattr(-,root,root)
+%defattr(0644,root,root,0755)
 %{_docdir}/%{name}/*
 %exclude %{_docdir}/%{name}/README
 %exclude %{_docdir}/%{name}/WhatsNew
@@ -228,6 +271,7 @@ rm -rf %{buildroot}
 
 %files server
 %defattr(-,root,root)
+%doc vnc_javasrc/{LICENCE.TXT,README,WhatsNew,index.html}
 %if %with xvnc
 %{_bindir}/Xvnc
 %endif
@@ -240,3 +284,11 @@ rm -rf %{buildroot}
 %{_mandir}/man1/vncconnect.1*
 %{_mandir}/man1/vncpasswd.1*
 %config(noreplace) %{_sysconfdir}/sysconfig/%{vnc}servers
+
+%files java
+%defattr(0644,root,root,0755)
+%{_javadir}/*
+%if %{gcj_support}
+%dir %{_libdir}/gcj/%{name}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/*
+%endif
