@@ -74,6 +74,7 @@ Summary:        A VNC server
 Group:          Development/Java
 Obsoletes:      vnc-java < %{version}-%{release}
 Provides:       vnc-java = %{version}-%{release}
+BuildRequires:  jpackage-utils
 %if %{gcj_support}
 Requires(post): java-gcj-compat
 Requires(postun): java-gcj-compat
