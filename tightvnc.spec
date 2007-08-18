@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 5
+Release:        %mkrel 6
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -25,8 +25,8 @@ Patch6:         tightvnc-1.2.9-includes.patch
 Patch7:         tightvnc-xf4vnc-no-xkb.patch
 Patch8:         vnc_unixsrc-CVE-2007-1003.patch
 Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
-Obsoletes:      vnc < %{version}
-Provides:       vnc = %{version}
+Obsoletes:      vnc < %{version}-%{release}
+Provides:       vnc = %{version}-%{release}
 BuildRequires:  gccmakedep
 BuildRequires:  imake
 BuildRequires:  libjpeg-devel
@@ -39,7 +39,7 @@ BuildRequires:  rman
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  X11-devel
 BuildRequires:  xorg-x11
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 VNC allows you to access to a remote graphical display through the network.
@@ -92,8 +92,8 @@ the desktop on your machine.
 %package doc
 Summary:        Complete documentation for VNC
 Group:          Networking/Remote access
-Obsoletes:      vnc-doc < %{version}
-Provides:       vnc-doc = %{version}
+Obsoletes:      vnc-doc < %{version}-%{release}
+Provides:       vnc-doc = %{version}-%{release}
 
 %description doc
 This package contains HTML  documentation  about  VNC  (Virtual  Network
@@ -182,12 +182,12 @@ mkdir -p %{buildroot}%{_datadir}/applications
 cat > %{buildroot}%{_datadir}/applications/mandriva-%{name}.desktop << EOF
 [Desktop Entry]
 Name=Tightvnc
-Comment=%{summary}
+Comment=Remote graphical access
 Exec=%{_bindir}/vncviewer
-Icon=%{name}
+Icon=tightvnc
 Terminal=true
 Type=Application
-Categories=Network;RemoteAccess; Dialup;
+Categories=Network;RemoteAccess;Dialup;
 Encoding=UTF-8
 EOF
 
