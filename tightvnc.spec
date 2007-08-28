@@ -188,7 +188,6 @@ Icon=tightvnc
 Terminal=true
 Type=Application
 Categories=Network;RemoteAccess;Dialup;
-Encoding=UTF-8
 EOF
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/sysconfig
