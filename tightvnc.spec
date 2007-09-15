@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 6
+Release:        %mkrel 7
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -76,8 +76,6 @@ Obsoletes:      vnc-java < %{version}-%{release}
 Provides:       vnc-java = %{version}-%{release}
 BuildRequires:  jpackage-utils
 %if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
 BuildArch:      noarch
