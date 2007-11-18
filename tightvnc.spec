@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 8
+Release:        %mkrel 9
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -124,7 +124,7 @@ find . -name Imakefile | \
 # remove cvs-files from distribution.
 find . -name "*,v" -exec rm -f {} \;
 perl -pi -e "s|/usr/local/vnc/classes|%{_datadir}/vnc/classes|" vncserver
-perl -pi -e 's|^\$fontPath =.*|\$fontPath = "%{_sysconfdir}/X11/fontpath.d/";|' vncserver
+perl -pi -e 's|^\$fontPath =.*|\$fontPath = "catalogue:%{_sysconfdir}/X11/fontpath.d/";|' vncserver
 
 %build
 %{serverbuild}
