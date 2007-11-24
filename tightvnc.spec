@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 10
+Release:        %mkrel 11
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -218,6 +218,10 @@ cd vnc_javasrc
 (cd %{buildroot}%{_javadir} && for jar in *-%{version}*; do %{__ln_s} ${jar} ${jar/-%{version}/}; done)
 %{__rm} %{buildroot}%{_javadir}/*.class
 
+%{__mkdir_p} %{buildroot}%{_datadir}/vnc/classes
+%{__cp} -a index.vnc %{buildroot}%{_datadir}/vnc/classes
+(cd %{buildroot}%{_datadir}/vnc/classes && %{__ln_s} VncViewer.jar VncViewer.jar)
+
 %if %{gcj_support}
 %{_bindir}/aot-compile-rpm
 %endif
@@ -287,6 +291,7 @@ rm -rf %{buildroot}
 %files java
 %defattr(0644,root,root,0755)
 %{_javadir}/*
+%{_datadir}/vnc
 %if %{gcj_support}
 %dir %{_libdir}/gcj/%{name}
 %attr(-,root,root) %{_libdir}/gcj/%{name}/*
