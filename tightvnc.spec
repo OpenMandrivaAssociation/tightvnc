@@ -39,6 +39,7 @@ BuildRequires:  rman
 BuildRequires:  tcp_wrappers-devel
 BuildRequires:  X11-devel
 BuildRequires:  xorg-x11
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 VNC allows you to access to a remote graphical display through the network.
