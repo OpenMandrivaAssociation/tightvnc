@@ -62,6 +62,8 @@ Obsoletes:      vnc-server < %{version}-%{release}
 Provides:       vnc-server = %{version}-%{release}
 %if %without xvnc
 Requires:       x11-server-xvnc
+%else
+Conflicts:      x11-server-xvnc
 %endif
 
 %description server
