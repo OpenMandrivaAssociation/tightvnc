@@ -20,7 +20,6 @@ Patch1:         tightvnc-1.2.6-config-x86_64.patch
 Patch2:         vncserver-vncpasswd-1.2.6.patch
 Patch3:         vncserver-halfbaked.patch
 Patch4:         vncviewer-fix-crash-when-lose-focus.patch
-Patch5:         tightvnc-1.2.9-fix-build-when-fds_bits-not-defined.patch
 Patch6:         tightvnc-1.2.9-includes.patch
 Patch7:         tightvnc-xf4vnc-no-xkb.patch
 Patch8:         vnc_unixsrc-CVE-2007-1003.patch
@@ -111,7 +110,6 @@ online documentation about VNC.
 %patch2 -p1 
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 %patch6 -p1
 %if %without xvnc
 %patch7 -p1
@@ -141,6 +139,7 @@ cd Xvnc
 ./configure
 make EXTRA_LIBRARIES="-lwrap -lnss_nis" CDEBUGFLAGS="$RPM_OPT_FLAGS" World \
         EXTRA_DEFINES="-DUSE_LIBWRAP=1"
+cd ..
 %endif
 
 cd vnc_javasrc
