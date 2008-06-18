@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 12
+Release:        %mkrel 13
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
