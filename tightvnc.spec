@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 14
+Release:        %mkrel 15
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -188,7 +188,6 @@ Icon=tightvnc
 Terminal=true
 Type=Application
 Categories=Network;RemoteAccess;Dialup;
-NotShowIn=KDE;
 EOF
 
 install -d -m 0755 %{buildroot}%{_sysconfdir}/sysconfig
