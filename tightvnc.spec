@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 15
+Release:        %mkrel 16
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -26,6 +26,8 @@ Patch8:         vnc_unixsrc-CVE-2007-1003.patch
 Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
 Obsoletes:      vnc < %{version}-%{release}
 Provides:       vnc = %{version}-%{release}
+Obsoletes:	nxviewer < 3.2.0
+Provides:	nxviewer
 BuildRequires:  gccmakedep
 BuildRequires:  imake
 BuildRequires:  libjpeg-devel
