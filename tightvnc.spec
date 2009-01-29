@@ -24,6 +24,7 @@ Patch6:         tightvnc-1.2.9-includes.patch
 Patch7:         tightvnc-xf4vnc-no-xkb.patch
 Patch8:         vnc_unixsrc-CVE-2007-1003.patch
 Patch9:         vnc_unixsrc-CVE-2007-1351-1352.patch
+Patch10:	tightvnc-1.3.9-format-security.patch
 Obsoletes:      vnc < %{version}-%{release}
 Provides:       vnc = %{version}-%{release}
 Obsoletes:	nxviewer < 3.2.0
@@ -118,6 +119,7 @@ online documentation about VNC.
 %endif
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 # nuke references to /usr/local
 find . -name Imakefile | \
