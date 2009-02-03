@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 17
+Release:        %mkrel 18
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -13,7 +13,6 @@ Source0:        http://dl.sourceforge.net/vnc-tight/tightvnc-%{version}_unixsrc.
 Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
 Source2:        %{name}-icons.tar.bz2
 Source3:        vncserverinit
-Source4:        %{name}.bash-completion
 Source5:        http://downloads.sourceforge.net/vnc-tight/tightvnc-%{version}_javasrc.tar.gz
 Patch0:         vnc-xclients.patch
 Patch1:         tightvnc-1.2.6-config-x86_64.patch
@@ -211,10 +210,6 @@ EOF
 
 install -m 0755 %{SOURCE3} -D %{buildroot}/%{_initrddir}/%{vnc}server
 
-# bash completion
-install -d -m 755 %{buildroot}%{_sysconfdir}/bash_completion.d
-install -m 644 %{SOURCE4} %{buildroot}%{_sysconfdir}/bash_completion.d/%{name}
-
 %{__mkdir_p} %{buildroot}%{_javadir}
 cd vnc_javasrc
 %{__make} ARCHIVE=vncviewer-%{version}.jar CP=%{__cp} JC=%{javac} JCFLAGS="-g" JAR=%{jar} INSTALL_DIR=%{buildroot}%{_javadir} install
@@ -266,7 +261,6 @@ rm -rf %{buildroot}
 %{_docdir}/%{name}/WhatsNew
 %{_docdir}/%{name}/ChangeLog
 %{_bindir}/vncviewer
-%config(noreplace) %{_sysconfdir}/bash_completion.d/%{name}
 %{_mandir}/man1/vncviewer.1*
 %{_datadir}/applications/mandriva-%{name}.desktop
 %{_liconsdir}/%{name}.png
