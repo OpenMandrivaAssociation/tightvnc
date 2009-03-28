@@ -4,7 +4,7 @@
 
 Name:           tightvnc
 Version:        1.3.9
-Release:        %mkrel 18
+Release:        %mkrel 19
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
@@ -35,6 +35,7 @@ BuildRequires:  libxpm-devel
 BuildRequires:  libxt-devel
 BuildRequires:  libxmu-devel
 BuildRequires:  libxaw-devel
+Buildrequires:	libxp-devel
 BuildRequires:  libz-devel
 BuildRequires:  rman
 BuildRequires:  tcp_wrappers-devel
