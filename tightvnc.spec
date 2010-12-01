@@ -4,11 +4,11 @@
 
 Name:           tightvnc
 Version:        1.3.10
-Release:        %mkrel 3
+Release:        %mkrel 4
 Summary:        Remote graphical access
 Group:          Networking/Remote access
 License:        GPL
-URL:            http://www.tightvnc.org/        
+URL:            http://www.tightvnc.org/
 Source0:        http://dl.sourceforge.net/vnc-tight/tightvnc-%{version}_unixsrc.tar.bz2
 Source1:        http://www.uk.research.att.com/vnc/dist/vnc-latest_doc.tar.bz2
 Source2:        %{name}-icons.tar.bz2
@@ -39,8 +39,6 @@ Buildrequires:	libxp-devel
 BuildRequires:  libz-devel
 BuildRequires:  rman
 BuildRequires:  tcp_wrappers-devel
-BuildRequires:  X11-devel
-BuildRequires:  xorg-x11
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
