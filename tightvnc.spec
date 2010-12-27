@@ -101,6 +101,7 @@ Summary: Java viewer for the VNC remote display system
 Group:   Networking/Remote access
 
 Provides:  vnc-java
+Conflicts: tigervnc-java
 
 %description java
 This distribution is based on the standard VNC source and includes new
@@ -115,10 +116,7 @@ There are three basic ways to use TightVNC Java viewer:
 %files java
 %defattr(-,root,root)
 %{_javadir}/*.jar
-%{_datadir}/%{name}/classes/*.class
-%{_datadir}/%{name}/classes/*.vnc
-%{_datadir}/%{name}/classes/*.jar
-
+%{_datadir}/%{name}
 
 #------------------------------------------------------------------------------
 
