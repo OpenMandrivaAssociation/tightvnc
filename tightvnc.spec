@@ -17,6 +17,7 @@ Patch2: 0003-Fix-compilation-with-Wformat-Werror-format-security.patch
 Patch3: 0004-Fix-font-path.patch
 Patch4: 0005-Install-binaries-with-standard-permissions.patch
 Patch5: 0006-Fix-java-class-path.patch
+Patch6: 0007-Set-source-to-1.3.patch
 
 BuildRequires: gccmakedep
 BuildRequires: imake
