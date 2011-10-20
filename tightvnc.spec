@@ -1,10 +1,8 @@
-Name:    tightvnc
-Version: 1.3.10
-Release: %mkrel 5
-
-License:   GPLv2+
-URL:       http://www.tightvnc.org
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+Name:		tightvnc
+Version:	1.3.10
+Release:	6
+License:	GPLv2+
+URL:		http://www.tightvnc.org
 
 Source0: http://sf.net/projects/vnc-tight/files/TightVNC-unix/%{version}/tightvnc-%{version}_unixsrc.tar.bz2
 Source1: http://sf.net/projects/vnc-tight/files/TightVNC-javaviewer/%{version}/tightvnc-%{version}_javasrc.tar.gz
