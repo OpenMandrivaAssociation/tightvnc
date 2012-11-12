@@ -1,0 +1,25 @@
+From 1ae05337ecaa3b2e6a409ed262bb4c51d6278f18 Mon Sep 17 00:00:00 2001
+From: Paulo Zanoni <pzanoni@mandriva.com>
+Date: Wed, 22 Dec 2010 17:16:09 -0200
+Subject: [PATCH 5/6] Install binaries with standard permissions
+
+---
+ vncinstall |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/vncinstall b/vncinstall
+index bf56809..873a102 100755
+--- a/vncinstall
++++ b/vncinstall
+@@ -47,7 +47,7 @@ for f in Xvnc/programs/Xserver/Xvnc vncviewer/vncviewer \
+   else
+     echo "Copying $f -> $bin_dst/`basename $f`"
+     cp -pf $f $bin_dst
+-    chmod 0555 $bin_dst/`basename $f`
++    chmod 0755 $bin_dst/`basename $f`
+   fi
+ 
+   # Installing man pages
+-- 
+1.7.1
+

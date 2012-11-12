@@ -1,0 +1,26 @@
+From 7e5a77cafc073c59f3a3b8221c692d4bc0473fe9 Mon Sep 17 00:00:00 2001
+From: Paulo Zanoni <pzanoni@mandriva.com>
+Date: Wed, 22 Dec 2010 17:03:54 -0200
+Subject: [PATCH 4/6] Fix font path.
+
+You can't open vncserver with the path provided.
+---
+ vncserver |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/vncserver b/vncserver
+index 97cb3f3..da2cb43 100755
+--- a/vncserver
++++ b/vncserver
+@@ -34,7 +34,7 @@ $depth = 24;
+ $desktopName = "X";
+ $vncClasses = "/usr/local/vnc/classes";
+ $vncUserDir = "$ENV{HOME}/.vnc";
+-$fontPath = "unix/:7100";
++$fontPath = "/usr/share/fonts/misc";
+ $authType = "-rfbauth $vncUserDir/passwd";
+ 
+ # Read configuration from the system-wide and user files if present.
+-- 
+1.7.1
+

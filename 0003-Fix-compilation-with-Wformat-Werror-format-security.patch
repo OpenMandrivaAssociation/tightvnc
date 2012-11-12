@@ -1,0 +1,157 @@
+From e99fb8eb302bbbc7d2e250c2941bc475956dec34 Mon Sep 17 00:00:00 2001
+From: Paulo Zanoni <pzanoni@mandriva.com>
+Date: Mon, 27 Dec 2010 08:20:34 -0200
+Subject: [PATCH 3/6] Fix compilation with -Wformat -Werror=format-security
+
+---
+ Xvnc/programs/Xserver/hw/vnc/init.c |    2 +-
+ vncviewer/sockets.c                 |   30 +++++++++++++++---------------
+ 2 files changed, 16 insertions(+), 16 deletions(-)
+
+diff --git a/Xvnc/programs/Xserver/hw/vnc/init.c b/Xvnc/programs/Xserver/hw/vnc/init.c
+index c2d82e0..b767368 100644
+--- a/Xvnc/programs/Xserver/hw/vnc/init.c
++++ b/Xvnc/programs/Xserver/hw/vnc/init.c
+@@ -943,7 +943,7 @@ void rfbLog(char *format, ...)
+ 
+     time(&clock);
+     strftime(buf, 255, "%d/%m/%y %T ", localtime(&clock));
+-    fprintf(stderr, buf);
++    fprintf(stderr, "%s", buf);
+ 
+     vfprintf(stderr, format, args);
+     fflush(stderr);
+diff --git a/vncviewer/sockets.c b/vncviewer/sockets.c
+index 07fd4b3..96554ca 100644
+--- a/vncviewer/sockets.c
++++ b/vncviewer/sockets.c
+@@ -102,7 +102,7 @@ ReadFromRFBServer(char *out, unsigned int n)
+ 	    ProcessXtEvents();
+ 	    i = 0;
+ 	  } else {
+-	    fprintf(stderr,programName);
++	    fprintf(stderr, "%s", programName);
+ 	    perror(": read");
+ 	    return False;
+ 	  }
+@@ -131,7 +131,7 @@ ReadFromRFBServer(char *out, unsigned int n)
+ 	    ProcessXtEvents();
+ 	    i = 0;
+ 	  } else {
+-	    fprintf(stderr,programName);
++	    fprintf(stderr, "%s", programName);
+ 	    perror(": read");
+ 	    return False;
+ 	  }
+@@ -171,13 +171,13 @@ WriteExact(int sock, char *buf, int n)
+ 	  FD_SET(rfbsock,&fds);
+ 
+ 	  if (select(rfbsock+1, NULL, &fds, NULL, NULL) <= 0) {
+-	    fprintf(stderr,programName);
++	    fprintf(stderr, "%s", programName);
+ 	    perror(": select");
+ 	    return False;
+ 	  }
+ 	  j = 0;
+ 	} else {
+-	  fprintf(stderr,programName);
++	  fprintf(stderr, "%s", programName);
+ 	  perror(": write");
+ 	  return False;
+ 	}
+@@ -209,13 +209,13 @@ ConnectToTcpAddr(unsigned int host, int port)
+ 
+   sock = socket(AF_INET, SOCK_STREAM, 0);
+   if (sock < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ConnectToTcpAddr: socket");
+     return -1;
+   }
+ 
+   if (connect(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ConnectToTcpAddr: connect");
+     close(sock);
+     return -1;
+@@ -223,7 +223,7 @@ ConnectToTcpAddr(unsigned int host, int port)
+ 
+   if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
+ 		 (char *)&one, sizeof(one)) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ConnectToTcpAddr: setsockopt");
+     close(sock);
+     return -1;
+@@ -250,7 +250,7 @@ FindFreeTcpPort(void)
+ 
+   sock = socket(AF_INET, SOCK_STREAM, 0);
+   if (sock < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": FindFreeTcpPort: socket");
+     return 0;
+   }
+@@ -285,28 +285,28 @@ ListenAtTcpPort(int port)
+ 
+   sock = socket(AF_INET, SOCK_STREAM, 0);
+   if (sock < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ListenAtTcpPort: socket");
+     return -1;
+   }
+ 
+   if (setsockopt(sock, SOL_SOCKET, SO_REUSEADDR,
+ 		 (const char *)&one, sizeof(one)) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ListenAtTcpPort: setsockopt");
+     close(sock);
+     return -1;
+   }
+ 
+   if (bind(sock, (struct sockaddr *)&addr, sizeof(addr)) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ListenAtTcpPort: bind");
+     close(sock);
+     return -1;
+   }
+ 
+   if (listen(sock, 5) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": ListenAtTcpPort: listen");
+     close(sock);
+     return -1;
+@@ -330,14 +330,14 @@ AcceptTcpConnection(int listenSock)
+ 
+   sock = accept(listenSock, (struct sockaddr *) &addr, &addrlen);
+   if (sock < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": AcceptTcpConnection: accept");
+     return -1;
+   }
+ 
+   if (setsockopt(sock, IPPROTO_TCP, TCP_NODELAY,
+ 		 (char *)&one, sizeof(one)) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": AcceptTcpConnection: setsockopt");
+     close(sock);
+     return -1;
+@@ -355,7 +355,7 @@ Bool
+ SetNonBlocking(int sock)
+ {
+   if (fcntl(sock, F_SETFL, O_NONBLOCK) < 0) {
+-    fprintf(stderr,programName);
++    fprintf(stderr, "%s", programName);
+     perror(": AcceptTcpConnection: fcntl");
+     return False;
+   }
+-- 
+1.7.1
+

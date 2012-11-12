@@ -1,0 +1,27 @@
+From 97d71ad326aa50f93a71d8e6842b9ec1ef8ced2f Mon Sep 17 00:00:00 2001
+From: Paulo Zanoni <pzanoni@mandriva.com>
+Date: Wed, 29 Dec 2010 14:29:50 -0200
+Subject: [PATCH 7/7] Set source to 1.3
+
+Minimum "-source" version for our javac is 1.3
+Also, let the compiler choose the target.
+---
+ vnc_javasrc/Makefile |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/vnc_javasrc/Makefile b/vnc_javasrc/Makefile
+index 0fed71c..47a8017 100644
+--- a/vnc_javasrc/Makefile
++++ b/vnc_javasrc/Makefile
+@@ -4,7 +4,7 @@
+ 
+ CP = cp
+ JC = javac
+-JCFLAGS = -target 1.1 -source 1.2
++JCFLAGS = -source 1.3
+ JAR = jar
+ ARCHIVE = VncViewer.jar
+ MANIFEST = MANIFEST.MF
+-- 
+1.7.1
+

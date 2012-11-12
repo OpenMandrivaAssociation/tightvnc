@@ -1,0 +1,25 @@
+From 3f3f3270b4cf11e70b5fcc9e4d12475b330fe204 Mon Sep 17 00:00:00 2001
+From: Paulo Zanoni <pzanoni@mandriva.com>
+Date: Thu, 23 Dec 2010 10:21:34 -0200
+Subject: [PATCH 6/6] Fix java class path
+
+---
+ vncserver |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/vncserver b/vncserver
+index da2cb43..481f54a 100755
+--- a/vncserver
++++ b/vncserver
+@@ -32,7 +32,7 @@
+ $geometry = "1024x768";
+ $depth = 24;
+ $desktopName = "X";
+-$vncClasses = "/usr/local/vnc/classes";
++$vncClasses = "/usr/share/tightvnc/classes";
+ $vncUserDir = "$ENV{HOME}/.vnc";
+ $fontPath = "/usr/share/fonts/misc";
+ $authType = "-rfbauth $vncUserDir/passwd";
+-- 
+1.7.1
+
