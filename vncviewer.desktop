@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=TightVNC Viewer
+Comment=Connect to VNC server and display remote desktop
+Exec=/usr/bin/vncviewer
+Icon=tightvnc
+Terminal=false
+Type=Application
+StartupWMClass=TigerVNC Viewer: Connection Details
+Categories=Network;RemoteAccess;
