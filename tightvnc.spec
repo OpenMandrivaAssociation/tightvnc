@@ -1,7 +1,7 @@
 Summary:	Viewer for the VNC remote display system
 Name:		tightvnc
 Version:	1.3.10
-Release:	7
+Release:	8
 License:	GPLv2+
 Group:		Networking/Remote access
 Url:		http://www.tightvnc.org
