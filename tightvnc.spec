@@ -101,7 +101,7 @@ There are three basic ways to use TightVNC Java viewer:
 %setup -q -n vnc_unixsrc
 %setup -q -D -a1 -n vnc_unixsrc
 %setup -q -D -a2 -n vnc_unixsrc
-%apply_patches
+%autopatch -p1
 
 %build
 %setup_compile_flags
