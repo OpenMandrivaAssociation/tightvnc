@@ -4,7 +4,7 @@ Version:	1.3.10
 Release:	8
 License:	GPLv2+
 Group:		Networking/Remote access
-Url:		http://www.tightvnc.org
+Url:		https://www.tightvnc.org
 Source0:	http://sf.net/projects/vnc-tight/files/TightVNC-unix/%{version}/tightvnc-%{version}_unixsrc.tar.bz2
 Source1:	http://sf.net/projects/vnc-tight/files/TightVNC-javaviewer/%{version}/tightvnc-%{version}_javasrc.tar.gz
 Source2:	%{name}-icons.tar.bz2
